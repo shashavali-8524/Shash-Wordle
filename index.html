@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Shash Wordle</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<button id="backBtn" class="back-btn hidden">⬅</button>
+<button id="themeToggle" class="theme-btn">🌙</button>
+
+<div class="app">
+  <h1>Shash Wordle</h1>
+
+  <!-- Name Screen -->
+  <div id="screen-name" class="section active">
+    <label>Enter your name</label>
+    <input id="playerName" maxlength="12" autocomplete="off">
+    <button class="btn" id="btnContinue">Continue</button>
+  </div>
+
+  <!-- Mode Screen -->
+  <div id="screen-mode" class="section">
+    <p>Hello <span id="playerLabel"></span> 👋</p>
+    <button class="btn" id="btnDaily">Daily Challenge</button>
+    <button class="btn" id="btnCreate">Create Challenge</button>
+  </div>
+
+  <!-- Create Challenge Screen -->
+  <div id="screen-create" class="section">
+    <label>Enter Secret Word</label>
+    <input id="secretInput" maxlength="5" autocomplete="off">
+
+    <button class="btn" id="btnGen">Generate Link</button>
+
+    <div id="genStatus" class="status"></div>
+    <div id="linkBox" class="link-box hidden"></div>
+    <button id="copyLink" class="btn secondary hidden">Copy Link</button>
+  </div>
+
+  <!-- Game Screen -->
+  <div id="screen-game" class="section">
+    <div class="challenge-info" id="challengeText"></div>
+    <div class="board" id="board"></div>
+    <div class="keyboard" id="keyboard"></div>
+    <div class="status" id="gameStatus"></div>
+  </div>
+</div>
+
+<!-- Popup -->
+<div id="resultPopup" class="popup">
+  <div class="popup-content">
+    <div id="popTitle" class="popup-title"></div>
+    <div id="popMeta" class="popup-meta"></div>
+    <button id="btnShare" class="btn">Share</button>
+    <button id="btnClose" class="btn secondary">Close</button>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
