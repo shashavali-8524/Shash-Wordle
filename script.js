@@ -29,6 +29,7 @@ playerLabel = document.getElementById("playerLabel"),
 btnDaily = document.getElementById("btnDaily"),
 btnCreate = document.getElementById("btnCreate"),
 btnGen = document.getElementById("btnGen"),
+btnRandom = document.getElementById("btnRandom"),   // ⭐ ADDED
 linkBox = document.getElementById("linkBox"),
 genStatus = document.getElementById("genStatus"),
 copyLink = document.getElementById("copyLink"),
@@ -52,7 +53,7 @@ const screens = {
 let playerName = "";
 let creatorName = "";
 let secretWord = "";
-let isDaily = false;          // ✅ add kiya
+let isDaily = false;
 let currentRow = 0;
 let guesses = [];
 let feedbackHistory = [];
@@ -83,21 +84,18 @@ window.onload = async () => {
   const token = new URLSearchParams(location.search).get("c");
 
   if (token) {
-    // challenge link se aaye ho
     try {
       const d = JSON.parse(atob(token));
       secretWord = d.w.toUpperCase();
       creatorName = d.by;
       isDaily = false;
-    } catch(e) {
+    } catch (e) {
       console.error("Invalid token", e);
     }
-    // name screen pe hi rahenge, pehle naam dalna hai
     showScreen("name");
     return;
   }
 
-  // normal flow
   showScreen("name");
 };
 
@@ -111,24 +109,22 @@ btnContinue.onclick = () => {
   const token = new URLSearchParams(location.search).get("c");
 
   if (token) {
-    // ✅ challenge link → direct game start
     try {
       const d = JSON.parse(atob(token));
       secretWord = d.w.toUpperCase();
       creatorName = d.by;
       isDaily = false;
-    } catch(e) {
+    } catch (e) {
       console.error("Invalid token on continue", e);
     }
     startGame();
     return;
   }
 
-  // normal case → go to mode screen
   showScreen("mode");
 };
 
-// Mode selection
+// ---- Daily Mode ----
 btnDaily.onclick = () => {
   isDaily = true;
   creatorName = "Daily";
@@ -136,9 +132,22 @@ btnDaily.onclick = () => {
   startGame();
 };
 
+// ---- Create Mode ----
 btnCreate.onclick = () => showScreen("create");
 
-// Generate challenge link
+// ---- Random Mode (⭐ NEW) ----
+btnRandom.onclick = () => {
+  const arr = Array.from(allowedWords);
+  if (arr.length === 0) return showError("Word list not loaded");
+
+  secretWord = arr[Math.floor(Math.random() * arr.length)];
+  creatorName = "Random Word";
+  isDaily = false;
+
+  startGame();
+};
+
+// ---- Generate challenge link ----
 btnGen.onclick = () => {
   const w = secretInput.value.trim().toUpperCase();
   if (!allowedWords.has(w)) return showError("Invalid Word!");
