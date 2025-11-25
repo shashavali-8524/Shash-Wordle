@@ -202,24 +202,64 @@ function buildBoard() {
 }
 
 // Build keyboard
-const kRows = ["QWERTYUIOP", "ASDFGHJKL", "ZXCVBNM"];
 function buildKeyboard() {
   keyboardEl.innerHTML = "";
-  kRows.forEach(rs => {
-    const row = document.createElement("div");
-    row.className = "kb-row";
-    rs.split("").forEach(L => {
-      const key = document.createElement("div");
-      key.className = "key";
-      key.dataset.letter = L;
-      key.textContent = L;
-      key.onclick = () => addLetter(L);
-      row.appendChild(key);
-    });
-    keyboardEl.appendChild(row);
+
+  // Row 1 (no change)
+  const row1 = document.createElement("div");
+  row1.className = "kb-row";
+  "QWERTYUIOP".split("").forEach(L => {
+    const key = document.createElement("div");
+    key.className = "key";
+    key.dataset.letter = L;
+    key.textContent = L;
+    key.onclick = () => addLetter(L);
+    row1.appendChild(key);
   });
-  addKey("⌫", removeLetter);
-  addKey("ENTER", submitGuess);
+  keyboardEl.appendChild(row1);
+
+  // Row 2 (no change)
+  const row2 = document.createElement("div");
+  row2.className = "kb-row";
+  "ASDFGHJKL".split("").forEach(L => {
+    const key = document.createElement("div");
+    key.className = "key";
+    key.dataset.letter = L;
+    key.textContent = L;
+    key.onclick = () => addLetter(L);
+    row2.appendChild(key);
+  });
+  keyboardEl.appendChild(row2);
+
+  // Row 3 (custom)
+  const row3 = document.createElement("div");
+  row3.className = "kb-row";
+
+  // BACKSPACE first
+  const backKey = document.createElement("div");
+  backKey.className = "key big";
+  backKey.textContent = "⌫";
+  backKey.onclick = removeLetter;
+  row3.appendChild(backKey);
+
+  // Letters Z to M
+  "ZXCVBNM".split("").forEach(L => {
+    const key = document.createElement("div");
+    key.className = "key";
+    key.dataset.letter = L;
+    key.textContent = L;
+    key.onclick = () => addLetter(L);
+    row3.appendChild(key);
+  });
+
+  // ENTER last
+  const enterKey = document.createElement("div");
+  enterKey.className = "key big";
+  enterKey.textContent = "ENTER";
+  enterKey.onclick = submitGuess;
+  row3.appendChild(enterKey);
+
+  keyboardEl.appendChild(row3);
 }
 
 function addKey(label, fn) {
