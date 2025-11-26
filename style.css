@@ -1082,3 +1082,74 @@ input:focus {
     border-color: var(--accent-color);
     background: var(--accent-glow)
 }
+/* --- MOBILE KEYBOARD FIX --- */
+@media(max-width: 600px) {
+    .keyboard {
+        position: fixed;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        max-width: 480px;
+        padding: 8px 6px;
+        background: var(--glass-bg);
+        backdrop-filter: blur(20px);
+        border-top: 1px solid var(--glass-border);
+        box-shadow: 0 -5px 20px rgba(0,0,0,0.2);
+        z-index: 100;
+    }
+
+    .kb-row {
+        padding: 0 4px;
+        gap: 4px;
+    }
+
+    .key {
+        height: 50px !important;    /* bigger keys */
+        font-size: 1rem;
+        border-radius: 8px;
+    }
+
+    .key.big {
+        flex: 2;                    /* ENTER & BACKSPACE wider */
+        font-size: 0.85rem;
+    }
+
+    #board {
+        margin-bottom: 110px;       /* space above keyboard */
+    }
+}
+
+.key {
+    -webkit-user-select: none;
+    touch-action: manipulation;
+}
+.key:active {
+    transform: scale(0.95);
+    opacity: 0.9;
+}
+
+html, body {
+  touch-action: manipulation !important;
+}
+.key {
+    position: relative;
+    z-index: 10;
+    pointer-events: auto !important;
+    touch-action: manipulation !important;
+}
+.keyboard {
+    pointer-events: auto !important;
+}
+
+.keyboard * {
+    pointer-events: auto !important;
+}
+.key {
+    padding: 6px 0;
+    min-width: 32px;
+}
+input, button, .key {
+  touch-action: manipulation;
+  font-size: 16px;  /* iPhone zoom disable */
+}
