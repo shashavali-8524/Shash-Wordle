@@ -6,40 +6,54 @@ const WORD_LENGTH = 5;
 const MAX_GUESSES = 6;
 
 async function loadWords() {
-  const res = await fetch("words.txt");
-  const text = await res.text();
-  const words = text
-    .split(/\r?\n/)
-    .map(w => w.trim().toUpperCase())
-    .filter(w => w.length === WORD_LENGTH);
+  try {
+    const res = await fetch("words.txt");
+    const text = await res.text();
+    const words = text
+      .split(/\r?\n/)
+      .map(w => w.trim().toUpperCase())
+      .filter(w => w.length === WORD_LENGTH);
 
-  allowedWords = new Set(words);
-  WORDLE_SOLUTIONS = words.slice(0, 200);
+    allowedWords = new Set(words);
+    WORDLE_SOLUTIONS = words.slice(0, 200);
+  } catch (e) {
+    console.error("Error loading words:", e);
+  }
 }
 
 // Elements
 const backBtn = document.getElementById("backBtn"),
-boardEl = document.getElementById("board"),
-keyboardEl = document.getElementById("keyboard"),
-statusEl = document.getElementById("gameStatus"),
-popup = document.getElementById("resultPopup"),
-btnContinue = document.getElementById("btnContinue"),
-playerInput = document.getElementById("playerName"),
-playerLabel = document.getElementById("playerLabel"),
-btnDaily = document.getElementById("btnDaily"),
-btnCreate = document.getElementById("btnCreate"),
-btnGen = document.getElementById("btnGen"),
-btnRandom = document.getElementById("btnRandom"),   // ⭐ ADDED
-linkBox = document.getElementById("linkBox"),
-genStatus = document.getElementById("genStatus"),
-copyLink = document.getElementById("copyLink"),
-secretInput = document.getElementById("secretInput"),
-challengeText = document.getElementById("challengeText"),
-popTitle = document.getElementById("popTitle"),
-popMeta = document.getElementById("popMeta"),
-btnClose = document.getElementById("btnClose"),
-btnShare = document.getElementById("btnShare"),
-themeToggle = document.getElementById("themeToggle");
+  boardEl = document.getElementById("board"),
+  keyboardEl = document.getElementById("keyboard"),
+  statusEl = document.getElementById("gameStatus"),
+  popup = document.getElementById("resultPopup"),
+  btnContinue = document.getElementById("btnContinue"),
+  playerInput = document.getElementById("playerName"),
+  playerLabel = document.getElementById("playerLabel"),
+  btnDaily = document.getElementById("btnDaily"),
+  btnCreate = document.getElementById("btnCreate"),
+  btnGen = document.getElementById("btnGen"),
+  btnRandom = document.getElementById("btnRandom"),
+  btnCreateRandom = document.getElementById("btnCreateRandom"),
+  linkBox = document.getElementById("linkBox"),
+  genStatus = document.getElementById("genStatus"),
+  copyLink = document.getElementById("copyLink"),
+  secretInput = document.getElementById("secretInput"),
+  challengeText = document.getElementById("challengeText"),
+  popTitle = document.getElementById("popTitle"),
+  popMeta = document.getElementById("popMeta"),
+  btnClose = document.getElementById("btnClose"),
+  btnShare = document.getElementById("btnShare"),
+  btnMenu = document.getElementById("btnMenu"),
+  btnGameShare = document.getElementById("btnGameShare"),
+  playerDisplay = document.getElementById("playerDisplay"),
+  playerDisplayName = document.getElementById("playerDisplayName"),
+  themeToggle = document.getElementById("themeToggle"),
+  themePopup = document.getElementById("themePopup"),
+  btnCloseTheme = document.getElementById("btnCloseTheme"),
+  prevAvatarBtn = document.getElementById("prevAvatar"),
+  nextAvatarBtn = document.getElementById("nextAvatar"),
+  currentAvatarEl = document.getElementById("currentAvatar");
 
 // Screens
 const screens = {
@@ -51,19 +65,32 @@ const screens = {
 
 // State
 let playerName = "";
+let playerAvatar = "🦊"; // Default
+let avatarIndex = 0;
 let creatorName = "";
 let secretWord = "";
+let creationSecret = "";
 let isDaily = false;
 let currentRow = 0;
 let guesses = [];
 let feedbackHistory = [];
 let isAnimating = false;
 
+const AVATARS = ["🦊", "🐼", "🐸", "🐯", "🦁", "🐮", "🐷", "🦄", "💀", "👽", "🤖", "🎃"];
+
 // Screen controls
 function showScreen(s) {
   Object.values(screens).forEach(x => x.classList.remove("active"));
   screens[s].classList.add("active");
   backBtn.classList.toggle("hidden", s === "name");
+
+  // Show player name in top right if not on name screen
+  if (s !== "name" && playerName) {
+    playerDisplay.classList.remove("hidden");
+    playerDisplayName.textContent = `${playerAvatar} ${playerName}`;
+  } else {
+    playerDisplay.classList.add("hidden");
+  }
 }
 
 // ---- Back Button ----
@@ -80,6 +107,24 @@ backBtn.onclick = () => {
 // Load page
 window.onload = async () => {
   await loadWords();
+  loadTheme(); // Load saved theme
+
+  // Load saved name & avatar
+  const savedName = localStorage.getItem("playerName");
+  const savedAvatar = localStorage.getItem("playerAvatar");
+
+  if (savedAvatar) {
+    playerAvatar = savedAvatar;
+    avatarIndex = AVATARS.indexOf(savedAvatar);
+    if (avatarIndex === -1) avatarIndex = 0;
+  }
+  updateAvatarDisplay();
+
+  if (savedName) {
+    playerName = savedName;
+    playerInput.value = savedName;
+    playerLabel.textContent = `${playerAvatar} ${savedName}`;
+  }
 
   const token = new URLSearchParams(location.search).get("c");
 
@@ -93,9 +138,36 @@ window.onload = async () => {
       console.error("Invalid token", e);
     }
     showScreen("name");
+    if (savedName) btnContinue.click(); // Auto-continue if name saved
     return;
   }
 
+  if (savedName) {
+    showScreen("mode");
+  } else {
+    showScreen("name");
+  }
+};
+
+// ---- Avatar Carousel ----
+function updateAvatarDisplay() {
+  playerAvatar = AVATARS[avatarIndex];
+  currentAvatarEl.textContent = playerAvatar;
+  localStorage.setItem("playerAvatar", playerAvatar);
+}
+
+prevAvatarBtn.onclick = () => {
+  avatarIndex = (avatarIndex - 1 + AVATARS.length) % AVATARS.length;
+  updateAvatarDisplay();
+};
+
+nextAvatarBtn.onclick = () => {
+  avatarIndex = (avatarIndex + 1) % AVATARS.length;
+  updateAvatarDisplay();
+};
+
+// Edit Name
+playerDisplay.onclick = () => {
   showScreen("name");
 };
 
@@ -104,7 +176,8 @@ btnContinue.onclick = () => {
   const name = playerInput.value.trim();
   if (!name) return;
   playerName = name;
-  playerLabel.textContent = name;
+  localStorage.setItem("playerName", name); // Save name
+  playerLabel.textContent = `${playerAvatar} ${name}`;
 
   const token = new URLSearchParams(location.search).get("c");
 
@@ -128,14 +201,49 @@ btnContinue.onclick = () => {
 btnDaily.onclick = () => {
   isDaily = true;
   creatorName = "Daily";
-  secretWord = WORDLE_SOLUTIONS[(Date.now() / 86400000 | 0) % WORDLE_SOLUTIONS.length] || "APPLE";
+  const dayIndex = (Date.now() / 86400000 | 0);
+  secretWord = WORDLE_SOLUTIONS[dayIndex % WORDLE_SOLUTIONS.length] || "APPLE";
+
+  // Check local storage for today's game
+  const savedGame = JSON.parse(localStorage.getItem(`daily_${dayIndex}`));
+
   startGame();
+
+  if (savedGame) {
+    savedGame.guesses.forEach(g => {
+      guesses[currentRow] = g;
+      const fb = getFeedback(g);
+      feedbackHistory.push(fb);
+      // Fast reveal (no animation)
+      const cells = boardEl.children[currentRow].children;
+      [...cells].forEach((c, i) => {
+        c.textContent = g[i];
+        c.classList.add(fb[i]);
+        updateKeyboard(g[i], fb[i]);
+      });
+      currentRow++;
+    });
+
+    if (savedGame.status === 'won') {
+      gameOver(true, true); // true=win, true=silent
+    } else if (savedGame.status === 'lost') {
+      gameOver(false, true);
+    }
+  }
 };
 
 // ---- Create Mode ----
-btnCreate.onclick = () => showScreen("create");
+btnCreate.onclick = () => {
+  showScreen("create");
+  secretInput.value = "";
+  secretInput.disabled = false;
+  creationSecret = "";
+  linkBox.classList.add("hidden");
+  copyLink.classList.add("hidden");
+  genStatus.textContent = "";
+};
 
-// ---- Random Mode (⭐ NEW) ----
+// ---- Random Mode ----
 btnRandom.onclick = () => {
   const arr = Array.from(allowedWords);
   if (arr.length === 0) return showError("Word list not loaded");
@@ -147,9 +255,24 @@ btnRandom.onclick = () => {
   startGame();
 };
 
+// ---- Create Random ----
+btnCreateRandom.onclick = () => {
+  const arr = Array.from(allowedWords);
+  if (arr.length === 0) return showError("Word list not loaded");
+  creationSecret = arr[Math.floor(Math.random() * arr.length)];
+  secretInput.value = "?????";
+  secretInput.disabled = true;
+};
+
 // ---- Generate challenge link ----
 btnGen.onclick = () => {
-  const w = secretInput.value.trim().toUpperCase();
+  let w;
+  if (secretInput.disabled) {
+    w = creationSecret;
+  } else {
+    w = secretInput.value.trim().toUpperCase();
+  }
+
   if (!allowedWords.has(w)) return showError("Invalid Word!");
 
   creatorName = playerName || "Someone";
@@ -176,6 +299,7 @@ copyLink.onclick = async () => {
 function startGame() {
   showScreen("game");
   statusEl.textContent = "";
+  btnGameShare.classList.add("hidden");
   currentRow = 0;
   guesses = [];
   feedbackHistory = [];
@@ -205,7 +329,7 @@ function buildBoard() {
 function buildKeyboard() {
   keyboardEl.innerHTML = "";
 
-  // Row 1 (no change)
+  // Row 1
   const row1 = document.createElement("div");
   row1.className = "kb-row";
   "QWERTYUIOP".split("").forEach(L => {
@@ -218,7 +342,7 @@ function buildKeyboard() {
   });
   keyboardEl.appendChild(row1);
 
-  // Row 2 (no change)
+  // Row 2
   const row2 = document.createElement("div");
   row2.className = "kb-row";
   "ASDFGHJKL".split("").forEach(L => {
@@ -231,11 +355,11 @@ function buildKeyboard() {
   });
   keyboardEl.appendChild(row2);
 
-  // Row 3 (custom)
+  // Row 3
   const row3 = document.createElement("div");
   row3.className = "kb-row";
 
-  // BACKSPACE first
+  // BACKSPACE
   const backKey = document.createElement("div");
   backKey.className = "key big";
   backKey.textContent = "⌫";
@@ -252,7 +376,7 @@ function buildKeyboard() {
     row3.appendChild(key);
   });
 
-  // ENTER last
+  // ENTER
   const enterKey = document.createElement("div");
   enterKey.className = "key big";
   enterKey.textContent = "ENTER";
@@ -260,14 +384,6 @@ function buildKeyboard() {
   row3.appendChild(enterKey);
 
   keyboardEl.appendChild(row3);
-}
-
-function addKey(label, fn) {
-  const k = document.createElement("div");
-  k.className = "key big";
-  k.textContent = label;
-  k.onclick = fn;
-  keyboardEl.lastChild.appendChild(k);
 }
 
 // Input
@@ -307,6 +423,15 @@ function submitGuess() {
 
   const fb = getFeedback(g);
   feedbackHistory.push(fb);
+
+  // Save daily progress
+  if (isDaily) {
+    const dayIndex = (Date.now() / 86400000 | 0);
+    const saved = JSON.parse(localStorage.getItem(`daily_${dayIndex}`)) || { guesses: [], status: 'playing' };
+    saved.guesses.push(g);
+    localStorage.setItem(`daily_${dayIndex}`, JSON.stringify(saved));
+  }
+
   reveal(g, fb);
 }
 
@@ -341,9 +466,16 @@ function reveal(g, fb) {
         setTimeout(() => {
           isAnimating = false;
 
-          if (g === secretWord) return gameOver(true);
+          if (g === secretWord) {
+            boardEl.children[currentRow].classList.add("win");
+            if (isDaily) saveDailyStatus('won');
+            return gameOver(true);
+          }
           currentRow++;
-          if (currentRow === MAX_GUESSES) return gameOver(false);
+          if (currentRow === MAX_GUESSES) {
+            if (isDaily) saveDailyStatus('lost');
+            return gameOver(false);
+          }
 
         }, 350);
       }
@@ -352,19 +484,54 @@ function reveal(g, fb) {
   });
 }
 
-function updateKeyboard(L, state) {
-  const k = keyboardEl.querySelector(`[data-letter="${L}"]`);
-  if (!k) return;
-  k.classList.add(state);
+function updateKeyboard(letter, state) {
+  const key = keyboardEl.querySelector(`[data-letter="${letter}"]`);
+  if (!key) return;
+
+  // priority: correct > present > absent
+  const priority = { correct: 3, present: 2, absent: 1 };
+  const current = key.dataset.state || "";
+
+  // Don't downgrade (example: correct should never turn yellow/grey)
+  if (current && priority[current] > priority[state]) return;
+
+  // remove old classes
+  key.classList.remove("correct", "present", "absent");
+
+  // add new class
+  key.classList.add(state);
+
+  // store new state
+  key.dataset.state = state;
+}
+
+function saveDailyStatus(status) {
+  const dayIndex = (Date.now() / 86400000 | 0);
+  const saved = JSON.parse(localStorage.getItem(`daily_${dayIndex}`)) || { guesses: [] };
+  saved.status = status;
+  localStorage.setItem(`daily_${dayIndex}`, JSON.stringify(saved));
 }
 
 // Game over popup
-function gameOver(win) {
-  popup.dataset.score = win ? `${currentRow + 1}/6` : `X/6`;
+function gameOver(win, silent = false) {
+  popup.dataset.score = win ? `${currentRow + (silent ? 0 : 1)}/6` : `X/6`;
   popTitle.textContent = win ? `🎉 Win!` : `❌ ${secretWord}`;
   popMeta.textContent = `Player: ${playerName}`;
-  popup.classList.add("active");
+
+  if (!silent) {
+    setTimeout(() => popup.classList.add("active"), 500);
+  } else {
+    popup.classList.add("active");
+  }
+
+  btnGameShare.classList.remove("hidden");
 }
+
+btnGameShare.onclick = () => popup.classList.add("active");
+btnMenu.onclick = () => {
+  popup.classList.remove("active");
+  showScreen("mode");
+};
 
 btnClose.onclick = () => popup.classList.remove("active");
 
@@ -378,20 +545,39 @@ btnShare.onclick = () => {
   alert("Copied!");
 };
 
-// Theme
-if (themeToggle) {
-  const savedTheme = localStorage.getItem("theme");
-  if (savedTheme === "dark") document.body.classList.add("dark");
-  themeToggle.onclick = () => {
-    document.body.classList.toggle("dark");
-    localStorage.setItem("theme",
-      document.body.classList.contains("dark") ? "dark" : "light"
-    );
-  };
-}
-
 // Error
 function showError(msg) {
   statusEl.textContent = msg;
   setTimeout(() => statusEl.textContent = "", 900);
+}
+
+// ================= THEME HANDLING =================
+themeToggle.onclick = () => {
+  themePopup.classList.add("active");
+};
+
+btnCloseTheme.onclick = () => {
+  themePopup.classList.remove("active");
+};
+
+// Global function for onclick in HTML
+window.setTheme = (themeName) => {
+  document.body.className = ""; // Reset classes
+  document.body.removeAttribute("data-theme");
+
+  if (themeName === "default") {
+    document.body.classList.add("dark"); // Default is dark violet
+  } else if (themeName === "dark") {
+    document.body.setAttribute("data-theme", "dark");
+  } else {
+    document.body.setAttribute("data-theme", themeName);
+  }
+
+  localStorage.setItem("theme", themeName);
+  themePopup.classList.remove("active");
+};
+
+function loadTheme() {
+  const saved = localStorage.getItem("theme") || "default";
+  setTheme(saved);
 }

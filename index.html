@@ -1,69 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Shash Wordle</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
 
 <body>
 
-<button id="backBtn" class="back-btn hidden">⬅</button>
-<button id="themeToggle" class="theme-btn">🌙</button>
+  <div class="background-anim"></div>
 
-<div class="app">
-  <h1>Shash Wordle</h1>
+  <button id="backBtn" class="back-btn hidden">⬅</button>
+  <div id="playerDisplay" class="player-display hidden">
+    <span id="playerDisplayName">Player</span> ✎
+  </div>
+  <button id="themeToggle" class="theme-btn">🎨</button>
 
-  <!-- Name Screen -->
-  <div id="screen-name" class="section active">
-    <label>Enter your name</label>
-    <input id="playerName" maxlength="12" autocomplete="off">
-    <button class="btn" id="btnContinue">Continue</button>
+  <div class="app">
+    <h1>Shash Wordle</h1>
+
+    <!-- Name Screen -->
+    <div id="screen-name" class="section active">
+      <label>Enter your name</label>
+
+      <!-- Avatar Carousel -->
+      <div class="avatar-carousel">
+        <button id="prevAvatar" class="nav-btn">❮</button>
+        <div id="currentAvatar" class="avatar-display">🦊</div>
+        <button id="nextAvatar" class="nav-btn">❯</button>
+      </div>
+
+      <input id="playerName" maxlength="12" autocomplete="off" placeholder="Your Name">
+      <button class="btn" id="btnContinue">Continue</button>
+    </div>
+
+    <!-- Mode Screen -->
+    <div id="screen-mode" class="section">
+      <p>Hello <span id="playerLabel"></span> 👋</p>
+
+      <button class="btn" id="btnDaily">Daily Challenge</button>
+      <button class="btn" id="btnCreate">Create Challenge</button>
+      <button class="btn" id="btnRandom">🎲 Play Random Word</button>
+    </div>
+
+    <!-- Create Challenge Screen -->
+    <div id="screen-create" class="section">
+      <label>Enter Secret Word</label>
+      <div class="input-with-btn">
+        <input id="secretInput" maxlength="5" autocomplete="off">
+        <button id="btnCreateRandom" class="btn-icon" title="Random Word">🎲</button>
+      </div>
+
+      <button class="btn" id="btnGen">Generate Link</button>
+
+      <div id="genStatus" class="status"></div>
+      <div id="linkBox" class="link-box hidden"></div>
+      <button id="copyLink" class="btn secondary hidden">Copy Link</button>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="screen-game" class="section">
+      <div class="challenge-info" id="challengeText"></div>
+      <div class="board" id="board"></div>
+
+      <!-- Moved Status & Share ABOVE Keyboard -->
+      <div class="status" id="gameStatus"></div>
+      <button id="btnGameShare" class="btn secondary hidden" style="margin-bottom: 10px;">Share Result</button>
+
+      <div class="keyboard" id="keyboard"></div>
+    </div>
+
+    <footer class="brand-footer">
+      Made by Shasha Vali
+    </footer>
   </div>
 
-  <!-- Mode Screen -->
-  <div id="screen-mode" class="section">
-    <p>Hello <span id="playerLabel"></span> 👋</p>
-
-    <button class="btn" id="btnDaily">Daily Challenge</button>
-    <button class="btn" id="btnCreate">Create Challenge</button>
-
-    <!-- ⭐ NEW BUTTON -->
-    <button class="btn" id="btnRandom">🎲 Play Random Word</button>
+  <!-- Theme Popup -->
+  <div id="themePopup" class="popup">
+    <div class="popup-content">
+      <div class="popup-title">Select Theme 🎨</div>
+      <div class="theme-menu">
+        <div class="theme-option" onclick="setTheme('default')">🔮 Violet</div>
+        <div class="theme-option" onclick="setTheme('dark')">🌑 Dark</div>
+        <div class="theme-option" onclick="setTheme('sunset')">🌅 Sunset</div>
+        <div class="theme-option" onclick="setTheme('dandelion')">🌼 Dandelion</div>
+        <div class="theme-option" onclick="setTheme('cyber')">👾 Cyber</div>
+        <div class="theme-option" onclick="setTheme('liquid')">💧 Liquid</div>
+      </div>
+      <button id="btnCloseTheme" class="btn secondary" style="margin-top: 20px;">Close</button>
+    </div>
   </div>
 
-  <!-- Create Challenge Screen -->
-  <div id="screen-create" class="section">
-    <label>Enter Secret Word</label>
-    <input id="secretInput" maxlength="5" autocomplete="off">
-
-    <button class="btn" id="btnGen">Generate Link</button>
-
-    <div id="genStatus" class="status"></div>
-    <div id="linkBox" class="link-box hidden"></div>
-    <button id="copyLink" class="btn secondary hidden">Copy Link</button>
+  <!-- Result Popup -->
+  <div id="resultPopup" class="popup">
+    <div class="popup-content">
+      <div id="popTitle" class="popup-title"></div>
+      <div id="popMeta" class="popup-meta"></div>
+      <button id="btnShare" class="btn">Share</button>
+      <button id="btnMenu" class="btn secondary">Back to Menu</button>
+      <button id="btnClose" class="btn secondary"
+        style="margin-top: 8px; background: transparent; border: 1px solid var(--glass-border);">Close</button>
+    </div>
   </div>
 
-  <!-- Game Screen -->
-  <div id="screen-game" class="section">
-    <div class="challenge-info" id="challengeText"></div>
-    <div class="board" id="board"></div>
-    <div class="keyboard" id="keyboard"></div>
-    <div class="status" id="gameStatus"></div>
-  </div>
-</div>
-
-<!-- Popup -->
-<div id="resultPopup" class="popup">
-  <div class="popup-content">
-    <div id="popTitle" class="popup-title"></div>
-    <div id="popMeta" class="popup-meta"></div>
-    <button id="btnShare" class="btn">Share</button>
-    <button id="btnClose" class="btn secondary">Close</button>
-  </div>
-</div>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
+
 </html>
