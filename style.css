@@ -1284,7 +1284,7 @@ input:focus {
     margin: 0;
     font-size: .55rem
 }
-}
+
 
 @media(max-height:600px) {
     .app {
@@ -1465,7 +1465,7 @@ input:focus {
     font-size: .9rem;
     transition: all .2s
 }
-}
+
 
 .keyboard {
     gap: 2px
@@ -1479,7 +1479,7 @@ input:focus {
     margin: 0;
     font-size: .55rem
 }
-}
+
 
 @media(max-height:600px) {
     .app {
@@ -1586,4 +1586,30 @@ input:focus {
 input,
 button {
     touch-action: manipulation;
+}
+
+/* Install Button */
+.install-btn {
+    position: fixed;
+    top: 12px;
+    right: 60px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    color: var(--text-color);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--glass-shadow);
+    transition: transform .2s;
+    z-index: 100;
+}
+
+.install-btn:hover {
+    transform: scale(1.1);
 }
