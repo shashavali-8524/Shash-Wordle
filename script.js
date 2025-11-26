@@ -394,6 +394,23 @@ document.addEventListener("keydown", e => {
   if (e.key === "Enter") submitGuess();
 });
 
+// Prevent native keyboard on mobile
+document.addEventListener("focusin", (e) => {
+  if (screens.game.classList.contains("active")) {
+    e.target.blur();
+  }
+});
+
+// Prevent zoom on double tap for mobile
+let lastTouchEnd = 0;
+document.addEventListener("touchend", (e) => {
+  const now = Date.now();
+  if (now - lastTouchEnd <= 300) {
+    e.preventDefault();
+  }
+  lastTouchEnd = now;
+}, false);
+
 function addLetter(l) {
   if (!guesses[currentRow]) guesses[currentRow] = "";
   if (guesses[currentRow].length < WORD_LENGTH) {
