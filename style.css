@@ -112,7 +112,8 @@ body[data-theme="liquid"] .key {
     padding: 0;
     box-sizing: border-box;
     font-family: var(--font-main), -apple-system, sans-serif;
-    -webkit-tap-highlight-color: transparent
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 body {
@@ -1046,12 +1047,209 @@ input:focus {
 
 .link-box {
     background: var(--key-bg);
+
+    .cell {
+        width: 32px;
+        height: 32px;
+        font-size: 1rem;
+        border-width: 1px
+    }
+
+    .board {
+        gap: 2px;
+        margin-bottom: 1px
+    }
+
+    .row {
+        gap: 2px
+    }
+
+    .key {
+        height: 38px;
+        font-size: .7rem
+    }
+
+    .key.big {
+        font-size: .6rem
+    }
+
+    .kb-row {
+        gap: 2px
+    }
+
+    .keyboard {
+        gap: 2px
+    }
+
+    .challenge-info {
+        display: none
+    }
+
+    .status {
+        margin: 0;
+        font-size: .55rem
+    }
+}
+
+@media(max-height:600px) {
+    .app {
+        padding: 42px 4px 0
+    }
+
+    h1 {
+        font-size: 1.1rem;
+        margin-bottom: 2px
+    }
+
+    .cell {
+        width: 30px;
+        height: 30px;
+        font-size: .95rem;
+        border-width: 1px
+    }
+
+    .board {
+        gap: 1px;
+        margin-bottom: 1px
+    }
+
+    .row {
+        gap: 1px
+    }
+
+    .key {
+        height: 36px;
+        font-size: .65rem
+    }
+
+    .key.big {
+        font-size: .55rem
+    }
+
+    .kb-row {
+        gap: 1px
+    }
+
+    .keyboard {
+        gap: 2px
+    }
+
+    .status {
+        margin: 0;
+        font-size: .5rem
+    }
+}
+
+.back-btn,
+.theme-btn {
+    position: fixed;
+    top: 12px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    color: var(--text-color);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--glass-shadow);
+    transition: transform .2s;
+    z-index: 100
+}
+
+.back-btn {
+    left: 12px
+}
+
+.theme-btn {
+    right: 12px
+}
+
+.back-btn:hover,
+.theme-btn:hover {
+    transform: scale(1.1)
+}
+
+.player-display {
+    position: fixed;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    padding: 6px 14px;
+    border-radius: 18px;
+    font-size: .85rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: var(--glass-shadow);
+    transition: transform .2s;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    max-width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.player-display:hover {
+    transform: translateX(-50%) scale(1.05)
+}
+
+.hidden {
+    display: none !important
+}
+
+.popup {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-height: 80vh;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--glass-border);
+    border-radius: 30px 30px 0 0;
+    padding: 20px;
+    transform: translateY(100%);
+    transition: transform .4s cubic-bezier(.16, 1, .3, 1);
+    z-index: 200;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, .2);
+    text-align: center;
+    overflow-y: auto
+}
+
+.popup.active {
+    transform: translateY(0)
+}
+
+.popup-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 6px
+}
+
+.popup-meta {
+    margin-bottom: 12px;
+    opacity: .8;
+    font-size: .95rem
+}
+
+.link-box {
+    background: var(--key-bg);
     padding: 10px;
     border-radius: 8px;
     font-family: monospace;
     font-size: .8rem;
     margin: 10px 0;
-    word-break: break-all
+    word-break: break-all;
+    background: rgba(0, 0, 0, .05);
 }
 
 .theme-menu {
@@ -1073,6 +1271,299 @@ input:focus {
     transition: all .2s
 }
 
+
+.keyboard {
+    gap: 2px
+}
+
+.challenge-info {
+    display: none
+}
+
+.status {
+    margin: 0;
+    font-size: .55rem
+}
+}
+
+@media(max-height:600px) {
+    .app {
+        padding: 42px 4px 0
+    }
+
+    h1 {
+        font-size: 1.1rem;
+        margin-bottom: 2px
+    }
+
+    .cell {
+        width: 30px;
+        height: 30px;
+        font-size: .95rem;
+        border-width: 1px
+    }
+
+    .board {
+        gap: 1px;
+        margin-bottom: 1px
+    }
+
+    .row {
+        gap: 1px
+    }
+
+    .key {
+        height: 36px;
+        font-size: .65rem
+    }
+
+    .key.big {
+        font-size: .55rem
+    }
+
+    .kb-row {
+        gap: 1px
+    }
+
+    .keyboard {
+        gap: 2px
+    }
+
+    .status {
+        margin: 0;
+        font-size: .5rem
+    }
+}
+
+.back-btn,
+.theme-btn {
+    position: fixed;
+    top: 12px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    color: var(--text-color);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--glass-shadow);
+    transition: transform .2s;
+    z-index: 100
+}
+
+.back-btn {
+    left: 12px
+}
+
+.theme-btn {
+    right: 12px
+}
+
+.back-btn:hover,
+.theme-btn:hover {
+    transform: scale(1.1)
+}
+
+.player-display {
+    position: fixed;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    padding: 6px 14px;
+    border-radius: 18px;
+    font-size: .85rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: var(--glass-shadow);
+    transition: transform .2s;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    max-width: 180px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis
+}
+
+.player-display:hover {
+    transform: translateX(-50%) scale(1.05)
+}
+
+.hidden {
+    display: none !important
+}
+
+.popup {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    max-height: 80vh;
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--glass-border);
+    border-radius: 30px 30px 0 0;
+    padding: 20px;
+    transform: translateY(100%);
+    transition: transform .4s cubic-bezier(.16, 1, .3, 1);
+    z-index: 200;
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, .2);
+    text-align: center;
+    overflow-y: auto
+}
+
+.popup.active {
+    transform: translateY(0)
+}
+
+.popup-title {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin-bottom: 6px
+}
+
+.popup-meta {
+    margin-bottom: 12px;
+    opacity: .8;
+    font-size: .95rem
+}
+
+.link-box {
+    background: var(--key-bg);
+    padding: 10px;
+    border-radius: 8px;
+    font-family: monospace;
+    font-size: .8rem;
+    margin: 10px 0;
+    word-break: break-all;
+    background: rgba(0, 0, 0, .05);
+}
+
+.theme-menu {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+    margin-top: 12px;
+    max-width: 100%
+}
+
+.theme-option {
+    padding: 10px;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    background: rgba(0, 0, 0, .05);
+    cursor: pointer;
+    font-weight: 700;
+    font-size: .9rem;
+    transition: all .2s
+}
+}
+
+.keyboard {
+    gap: 2px
+}
+
+.challenge-info {
+    display: none
+}
+
+.status {
+    margin: 0;
+    font-size: .55rem
+}
+}
+
+@media(max-height:600px) {
+    .app {
+        padding: 42px 4px 0
+    }
+
+    h1 {
+        font-size: 1.1rem;
+        margin-bottom: 2px
+    }
+
+    .cell {
+        width: 30px;
+        height: 30px;
+        font-size: .95rem;
+        border-width: 1px
+    }
+
+    .board {
+        gap: 1px;
+        margin-bottom: 1px
+    }
+
+    .row {
+        gap: 1px
+    }
+
+    .key {
+        height: 36px;
+        font-size: .65rem
+    }
+
+    .key.big {
+        font-size: .55rem
+    }
+
+    .kb-row {
+        gap: 1px
+    }
+
+    .keyboard {
+        gap: 2px
+    }
+
+    .status {
+        margin: 0;
+        font-size: .5rem
+    }
+}
+
+.back-btn,
+.theme-btn {
+    position: fixed;
+    top: 12px;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    color: var(--text-color);
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--glass-shadow);
+    transition: transform .2s;
+    z-index: 100
+}
+
+.back-btn {
+    left: 12px
+}
+
+.theme-btn {
+    right: 12px
+}
+
+.back-btn:hover,
+.theme-btn:hover {
+    transform: scale(1.1)
+}
+
 .theme-option:hover {
     transform: scale(1.05);
     background: rgba(0, 0, 0, .1)
@@ -1082,74 +1573,17 @@ input:focus {
     border-color: var(--accent-color);
     background: var(--accent-glow)
 }
-/* --- MOBILE KEYBOARD FIX --- */
-@media(max-width: 600px) {
-    .keyboard {
-        position: fixed;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 100%;
-        max-width: 480px;
-        padding: 8px 6px;
-        background: var(--glass-bg);
-        backdrop-filter: blur(20px);
-        border-top: 1px solid var(--glass-border);
-        box-shadow: 0 -5px 20px rgba(0,0,0,0.2);
-        z-index: 100;
-    }
 
-    .kb-row {
-        padding: 0 4px;
-        gap: 4px;
-    }
-
-    .key {
-        height: 50px !important;    /* bigger keys */
-        font-size: 1rem;
-        border-radius: 8px;
-    }
-
-    .key.big {
-        flex: 2;                    /* ENTER & BACKSPACE wider */
-        font-size: 0.85rem;
-    }
-
-    #board {
-        margin-bottom: 110px;       /* space above keyboard */
-    }
-}
-
+/* Cleaned up utility classes */
 .key {
+    user-select: none;
     -webkit-user-select: none;
     touch-action: manipulation;
-}
-.key:active {
-    transform: scale(0.95);
-    opacity: 0.9;
-}
-
-html, body {
-  touch-action: manipulation !important;
-}
-.key {
     position: relative;
     z-index: 10;
-    pointer-events: auto !important;
-    touch-action: manipulation !important;
-}
-.keyboard {
-    pointer-events: auto !important;
 }
 
-.keyboard * {
-    pointer-events: auto !important;
-}
-.key {
-    padding: 6px 0;
-    min-width: 32px;
-}
-input, button, .key {
-  touch-action: manipulation;
-  font-size: 16px;  /* iPhone zoom disable */
+input,
+button {
+    touch-action: manipulation;
 }
