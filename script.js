@@ -426,6 +426,7 @@ function updateRow() {
 
 // Submit guess
 function submitGuess() {
+  if (isAnimating) return;
   const g = guesses[currentRow]?.toUpperCase();
   if (!g || g.length < WORD_LENGTH)
     return showError("Not enough letters");
