@@ -433,7 +433,9 @@ input:focus {
 .board {
     display: grid;
     gap: 4px;
-    margin-bottom: 4px
+    margin-bottom: 4px;
+    margin-top: 6vh;
+    /* Move board down */
 }
 
 .row {
@@ -631,7 +633,8 @@ input:focus {
 
     .board {
         gap: 3px;
-        margin-bottom: 3px
+        margin-bottom: 3px;
+        margin-top: 2vh;
     }
 
     .row {
@@ -681,7 +684,8 @@ input:focus {
 
     .board {
         gap: 3px;
-        margin-bottom: 3px
+        margin-bottom: 3px;
+        margin-top: 1vh;
     }
 
     .row {
@@ -747,7 +751,8 @@ input:focus {
 
     .board {
         gap: 2px;
-        margin-bottom: 2px
+        margin-bottom: 2px;
+        margin-top: 0;
     }
 
     .row {
@@ -1500,7 +1505,8 @@ input:focus {
 
     .board {
         gap: 1px;
-        margin-bottom: 1px
+        margin-bottom: 1px;
+        margin-top: 0;
     }
 
     .row {
