@@ -71,7 +71,7 @@ shash-wordle/
 ![screen1](screenshot_205629.png)
 ![screen2](screenshot_205638.png)
 ![screen3](screenshot_205651.png)
-![screen4](screenshot_205704.png)
+![screen4](screenshot_211259.png)
 
 
 🤝 **Contributing**
