@@ -68,10 +68,11 @@ shash-wordle/
 
 📸 **Screenshots**
 
-Screenshot 2025-11-27 205704.png
-Screenshot 2025-11-27 205629.png
-Screenshot 2025-11-27 205638.png
-Screenshot 2025-11-27 205651.png
+![screen1](screenshot_205629.png)
+![screen2](screenshot_205638.png)
+![screen3](screenshot_205651.png)
+![screen4](screenshot_205704.png)
+
 
 🤝 **Contributing**
 
