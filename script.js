@@ -360,12 +360,12 @@ function buildKeyboard() {
   const row3 = document.createElement("div");
   row3.className = "kb-row";
 
-  // BACKSPACE
-  const backKey = document.createElement("div");
-  backKey.className = "key big";
-  backKey.textContent = "⌫";
-  backKey.onclick = removeLetter;
-  row3.appendChild(backKey);
+  // ENTER (left side)
+  const enterKey = document.createElement("div");
+  enterKey.className = "key big";
+  enterKey.textContent = "ENTER";
+  enterKey.onclick = submitGuess;
+  row3.appendChild(enterKey);
 
   // Letters Z to M
   "ZXCVBNM".split("").forEach(L => {
@@ -377,12 +377,12 @@ function buildKeyboard() {
     row3.appendChild(key);
   });
 
-  // ENTER
-  const enterKey = document.createElement("div");
-  enterKey.className = "key big";
-  enterKey.textContent = "ENTER";
-  enterKey.onclick = submitGuess;
-  row3.appendChild(enterKey);
+  // BACKSPACE (right side)
+  const backKey = document.createElement("div");
+  backKey.className = "key big";
+  backKey.textContent = "⌫";
+  backKey.onclick = removeLetter;
+  row3.appendChild(backKey);
 
   keyboardEl.appendChild(row3);
 }
@@ -401,6 +401,24 @@ document.addEventListener("focusin", (e) => {
     e.target.blur();
   }
 });
+
+// Fix mobile viewport height (address bar hide/show)
+function setMobileViewport() {
+  const vh = window.innerHeight;
+  document.documentElement.style.setProperty('--app-height', `${vh}px`);
+}
+setMobileViewport();
+window.addEventListener('resize', setMobileViewport);
+window.addEventListener('orientationchange', () => {
+  setTimeout(setMobileViewport, 100);
+});
+
+// Prevent pull-to-refresh and overscroll on mobile
+document.body.addEventListener('touchmove', (e) => {
+  if (!e.target.closest('.popup')) {
+    e.preventDefault();
+  }
+}, { passive: false });
 
 // Prevent zoom on double tap for mobile
 
